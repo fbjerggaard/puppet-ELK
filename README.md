@@ -28,5 +28,3 @@ file_concat
 puppetlabs_java  
 
 ## Development
-
-##License
