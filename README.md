@@ -21,11 +21,11 @@ Kibana 4.0.1
 Note: This module doesnt change the default cluster name of Elasticsearch
 
 ## Dependencies
-stdlib
-logstash
-elasticsearch
-file_concat
-puppetlabs_java
+stdlib  
+logstash  
+elasticsearch  
+file_concat  
+puppetlabs_java  
 
 ## Development
 
