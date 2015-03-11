@@ -1,0 +1,82 @@
+input {
+    tcp {
+        type => "syslog"
+        host => "<%= @ipaddress %>"
+        port => 3514
+    }
+    tcp {
+        type   => "eventlog"
+        host   => "<%= @ipaddress %>"
+        port   => 3515
+        format => 'json'
+    }
+}
+
+filter {
+    if [type] == "syslog" {
+        grok {
+          match => { "message" => "%{SYSLOGTIMESTAMP:syslog_timestamp} %{SYSLOGHOST:syslog_hostname} %{DATA:syslog_program}(?:\[%{POSINT:syslog_pid}\])?: %{GREEDYDATA:syslog_message}" }
+          add_field => [ "received_at", "%{@timestamp}" ]
+          add_field => [ "received_from", "%{host}" ]
+        }
+        syslog_pri { }
+        date {
+          match => [ "syslog_timestamp", "MMM  d HH:mm:ss", "MMM dd HH:mm:ss" ]
+        }
+    }
+
+    if [type] == "eventlog" {
+        mutate {
+            lowercase => [ "EventType", "FileName", "Hostname", "Severity" ]
+        }
+        mutate {
+            rename => [ "Hostname", "source_host" ]
+        }
+        mutate {
+            gsub => ["source_host","\.example\.com",""]
+        }
+        date {
+            match => [ "EventTime", "YYYY-MM-dd HH:mm:ss" ]
+        }
+        mutate {
+            rename => [ "Severity", "eventlog_severity" ]
+            rename => [ "SeverityValue", "eventlog_severity_code" ]
+            rename => [ "Channel", "eventlog_channel" ]
+            rename => [ "SourceName", "eventlog_program" ]
+            rename => [ "SourceModuleName", "nxlog_input" ]
+            rename => [ "Category", "eventlog_category" ]
+            rename => [ "EventID", "eventlog_id" ]
+            rename => [ "RecordNumber", "eventlog_record_number" ]
+            rename => [ "ProcessID", "eventlog_pid" ]
+        }
+
+        if [SubjectUserName] =~ "." {
+            mutate {
+                replace => [ "AccountName", "%{SubjectUserName}" ]
+            }
+        }
+        if [TargetUserName] =~ "." {
+            mutate {
+                replace => [ "AccountName", "%{TargetUserName}" ]
+            }
+        }
+        if [FileName] =~ "." {
+            mutate {
+                replace => [ "eventlog_channel", "%{FileName}" ]
+            }
+        }
+
+        mutate {
+            lowercase => [ "AccountName", "eventlog_channel" ]
+        }
+        mutate {
+          remove => [ "SourceModuleType", "EventTimeWritten", "EventReceivedTime", "EventType" ]
+        }
+    }
+}
+
+output {
+  elasticsearch {
+  host => "<%= @ipaddress_lo %>"
+  }
+}

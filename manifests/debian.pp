@@ -40,7 +40,12 @@ class elk::debian (
       kibana4_gid          => 200,
       kibana4_uid          => 200,
   }
-  Anchor['elk::debian::end'] Class['kibana4'] -> Class['logstash'] ->Anchor['elk::debian::begin'] ->
+  file { "/etc/logstash/conf.d/logstash.conf" :
+    ensure      => present,
+    content => template('elk/logstash.conf.erb'),
+  }
+  Anchor['elk::debian::begin'] -> Class['kibana4'] -> Class['logstash'] -> Anchor['elk::debian::end']
+  }
   else {
     fail("The ELK Module is only supported on 64 OS's")
   }
