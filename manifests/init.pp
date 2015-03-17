@@ -5,6 +5,7 @@ class elk (
   $es_package_url = $elk::params::es_package_url,
   $ls_package_url = $elk::params::ls_package_url,
   $kibana_package_url = $elk::params::kibana_package_url,
+  $listen_ip = $elk::params::listen_ip,
 ) inherits elk::params {
   case $::osfamily {
     'Debian': {include elk::debian}

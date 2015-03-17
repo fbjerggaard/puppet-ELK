@@ -6,6 +6,7 @@ class elk::debian (
   $ls_package_url = $elk::params::ls_package_url,
   $kibana_package_url = $elk::params::kibana_package_url,
   $es_config_dir = $elk::params::es_config_dir,
+  $listen_ip = $elk::params::listen_ip,
 ) inherits elk::params {
 
   if $::hardwaremodel == 'x86_64'{
