@@ -33,6 +33,7 @@ class elk::debian (
     # kibana 4 install
     class { '::kibana4':
       package_download_url => $kibana_package_url,
+      package_ensure       => '4.0.1-linux-x64',
       package_provider     => 'archive',
       manage_user          => true,
       kibana4_user         => kibana4,
