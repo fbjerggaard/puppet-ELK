@@ -2,10 +2,7 @@
 
 #### Table of Contents
 1. [Overview](#overview)
-2. [Description](#description)
-3. [Dependencies](#dependencies)
-4. [Usage](#usage)
-5. [Development](#development)
+2. [Usage](#usage)
 
 ## Overview
 This module is a wrapper for the following modules to get the ELK stack up and running
@@ -21,12 +18,6 @@ Kibana 4.0.1
 
 Note: This module doesnt change the default cluster name of Elasticsearch
 
-## Dependencies
-stdlib
-logstash
-elasticsearch
-file_concat
-puppetlabs_java
 ## Usage
 In your site.pp
 ```puppet
@@ -34,4 +25,3 @@ node 'cheese.com'{
   class {'elk':}
 }
 ```
-## Development
