@@ -1,6 +1,5 @@
 {
   "author": "Frederik Bjerggaard Nielsen",
-  "dependencies": [],
   "license": "MIT",
   "name": "fbn-elk",
   "project_page": "https://github.com/fbjerggaard/puppet-ELK",
